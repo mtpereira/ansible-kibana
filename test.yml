@@ -1,0 +1,48 @@
+---
+- hosts: all
+
+  vars_files:
+    - defaults/main.yml
+    - vars/main.yml
+
+  handlers:
+    - include: handlers/main.yml
+
+  tasks:
+    - include: tasks/main.yml
+
+    - meta: flush_handlers
+
+    - name: test - check installation dir
+      stat:
+        path: "{{ kibana_install_dir }}/kibana"
+        follow: no
+      register: kibana_test_install_dir
+      changed_when: no
+
+    - name: test - assert that installation dir is a symlink
+      assert:
+        that: "{{ kibana_test_install_dir.stat.islnk }}"
+
+    - name: test - assert that installation dir is a symlink
+      assert:
+        that: "'{{ kibana_test_install_dir.stat.lnk_source }} == {{ kibana_install_dir }}/kibana'"
+
+    - name: test - check process
+      shell: pgrep --full --group {{ kibana_group }} --uid {{ kibana_user }} --list-name kibana
+      register: kibana_test_process
+      changed_when: no
+
+    - name: test - assert that kibana is running with the correct user and group
+      assert:
+        that: "{{ kibana_test_process | success }}"
+
+    - name: test - check kibana service status
+      command: service kibana status
+      register: kibana_test_service
+      changed_when: no
+
+    - name: test - assert that kibana service status is running
+      assert:
+        that: "'{{ kibana_test_service.stdout }}' == 'kibana is running'"
+

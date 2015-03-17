@@ -1,0 +1,58 @@
+---
+- name: install - stop kibana if already installed
+  service:
+    name: kibana
+    state: stopped
+  when: ansible_local.kibana is defined
+  sudo: yes
+
+- name: install - create group
+  group:
+    name: "{{ kibana_group }}"
+    system: yes
+    state: present
+  sudo: yes
+
+- name: install - create user
+  user:
+    name: "{{ kibana_user }}"
+    group: "{{ kibana_group }}"
+    home: "{{ kibana_install_dir }}/kibana"
+    createhome: no
+    shell: /bin/false
+    system: yes
+    state: present
+  sudo: yes
+
+- name: install - get tarball
+  get_url:
+    url: "{{ kibana_url }}/{{ kibana_tarball }}"
+    dest: "{{ kibana_download_dir }}"
+    sha256sum: "{{ kibana_tarball_checksum }}"
+  register: kibana_get_tarball
+
+- name: install - extract tarball
+  unarchive:
+    src: "{{ kibana_download_dir }}/{{ kibana_tarball }}"
+    dest: "{{ kibana_install_dir }}"
+    copy: no
+  when: kibana_get_tarball is defined and kibana_get_tarball.changed
+  no_log: yes
+  sudo: yes
+
+- name: cleanup - remove tarball
+  file:
+    dest: "{{ kibana_download_dir }}/{{ kibana_tarball }}"
+    state: absent
+  changed_when: no
+  when: kibana_get_tarball is defined and kibana_get_tarball.changed
+
+- name: install - symlink current version
+  file:
+    dest: "{{ kibana_install_dir }}/kibana"
+    src: "{{ kibana_install_dir }}/{{ kibana_tarball_name }}"
+    owner: "{{ kibana_user }}"
+    group: "{{ kibana_group }}"
+    state: link
+  sudo: yes
+

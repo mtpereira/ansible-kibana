@@ -1,0 +1,7 @@
+---
+- name: kibana-restart
+  service:
+    name: kibana
+    state: restarted
+  sudo: yes
+

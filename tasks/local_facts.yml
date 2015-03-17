@@ -1,0 +1,19 @@
+---
+- name: local facts - create directory
+  file:
+    dest: /etc/ansible/facts.d
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  sudo: yes
+
+- name: configure - setup local facts
+  template:
+    dest: /etc/ansible/facts.d/kibana.fact
+    src: kibana.fact.j2
+    owner: root
+    group: root
+    mode: 0644
+  sudo: yes
+

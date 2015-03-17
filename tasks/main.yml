@@ -1,0 +1,49 @@
+---
+- name: main - assert that required variables are defined
+  assert:
+    that:
+      - kibana_tarball is defined
+      - kibana_tarball_checksum is defined
+      - kibana_url is defined
+      - kibana_install_dir is defined
+      - kibana_download_dir is defined
+      - kibana_user is defined
+      - kibana_group is defined
+      - kibana_port is defined
+      - kibana_bind is defined
+      - kibana_elasticsearch_url is defined
+      - kibana_request_timeout > 0
+      - kibana_default_app is defined
+      - kibana_shard_timeout is defined
+      - kibana_verify_ssl is defined
+      - kibana_pid is defined
+      - kibana_running is defined
+  tags: kibana_checks
+
+- debug: var=ansible_local.kibana
+  tags: kibana_checks
+
+- name: main - check local facts for idempotency
+  set_fact:
+    kibana_tarball_checksum_diff: "{{ ansible_local.kibana.tarball_checksum is not defined or kibana_tarball_checksum != ansible_local.kibana.tarball_checksum }}"
+    kibana_tarball_diff: "{{ ansible_local.kibana.tarball is not defined or kibana_tarball != ansible_local.kibana.tarball }}"
+    kibana_url_diff: "{{ ansible_local.kibana.url is not defined or kibana_url != ansible_local.kibana.url }}"
+    kibana_install_dir_diff: "{{ ansible_local.kibana.install_dir is not defined or kibana_install_dir != ansible_local.kibana.install_dir }}"
+  when: ansible_local is defined
+  tags: kibana_checks
+
+- debug: var=ansible_local.kibana.install_dir
+  tags: kibana_checks
+- debug: var=kibana_install_dir_diff
+  tags: kibana_checks
+
+- include: install.yml
+  when: ansible_local is not defined or kibana_tarball_checksum_diff | bool or kibana_tarball_diff | bool or kibana_url_diff | bool or kibana_install_dir_diff | bool
+  tags: kibana_install
+
+- include: configure.yml
+  tags: kibana_configure
+
+- include: local_facts.yml
+  tags: kibana_local_facts
+

@@ -1,0 +1,41 @@
+---
+- name: configure - configure kibana
+  template:
+    dest: "{{ kibana_install_dir }}/kibana/config/kibana.yml"
+    src: kibana.yml.j2
+    owner: root
+    group: root
+    mode: 0755
+  notify: kibana-restart
+  sudo: yes
+
+- name: configure - init script
+  template:
+    dest: /etc/init.d/kibana
+    src: kibana.init.j2
+    owner: root
+    group: root
+    mode: 0755
+  sudo: yes
+
+- name: configure - init configuration
+  template:
+    dest: /etc/default/kibana
+    src: kibana.default.j2
+    owner: root
+    group: root
+    mode: 0644
+  sudo: yes
+
+- name: configure - enable service
+  service:
+    name: kibana
+    enabled: yes
+  sudo: yes
+
+- name: configure - start service
+  service:
+    name: kibana
+    state: running
+  when: kibana_running
+

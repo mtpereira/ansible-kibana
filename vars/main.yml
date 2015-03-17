@@ -1,0 +1,4 @@
+---
+kibana_download_dir: /tmp
+kibana_tarball_name: "{{ kibana_tarball | replace('.tar.gz', '') }}"
+
