@@ -20,9 +20,6 @@
       - kibana_running is defined
   tags: kibana_checks
 
-- debug: var=ansible_local.kibana
-  tags: kibana_checks
-
 - name: main - check local facts for idempotency
   set_fact:
     kibana_tarball_checksum_diff: "{{ ansible_local.kibana.tarball_checksum is not defined or kibana_tarball_checksum != ansible_local.kibana.tarball_checksum }}"
@@ -30,11 +27,6 @@
     kibana_url_diff: "{{ ansible_local.kibana.url is not defined or kibana_url != ansible_local.kibana.url }}"
     kibana_install_dir_diff: "{{ ansible_local.kibana.install_dir is not defined or kibana_install_dir != ansible_local.kibana.install_dir }}"
   when: ansible_local is defined
-  tags: kibana_checks
-
-- debug: var=ansible_local.kibana.install_dir
-  tags: kibana_checks
-- debug: var=kibana_install_dir_diff
   tags: kibana_checks
 
 - include: install.yml

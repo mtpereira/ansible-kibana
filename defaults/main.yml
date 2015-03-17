@@ -8,9 +8,9 @@ kibana_group: kibana
 kibana_running: true
 
 kibana_port: 5601
-kibana_bind: 0.0.0.0
+kibana_bind: 127.0.0.1
 kibana_elasticsearch_url: "http://localhost:9200"
-kibana_request_timeout: "300000"
+kibana_request_timeout: 300000
 kibana_default_app: "discover"
 kibana_shard_timeout: 0
 kibana_verify_ssl: true
