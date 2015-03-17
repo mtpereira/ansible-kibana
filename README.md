@@ -30,7 +30,7 @@ Required variables:
 * `kibana_default_app`: The default view for Kibana, e.g., "discover", "visualize", "dashboard". Defaults to "discover".
 * `kibana_shard_timeout`: Time in milliseconds for Elasticsearch to wait for responses from shards. Set to `0` to disable. Defaults to `0`.
 * `kibana_verify_ssl`: Set to false to have a complete disregard for the validity of the SSL. Defaults to `true`.
-* `kibana_pid`: Path for Kibana's PID file. Defaults to `/var/run/kibana.pid`.
+* `kibana_pid`: Path for Kibana's PID file, managed by the init script and not by Kibana. The `pid_file` configuration of Kibana is not changed, since it would conflict with our init script and require mangling with `/var/run` directory permissions. Defaults to `/var/run/kibana.pid`.
 * `kibana_running`: Start service after installation and configuration. Defaults to `true`.
 
 Local facts:

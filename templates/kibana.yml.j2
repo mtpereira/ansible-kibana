@@ -52,7 +52,7 @@ ssl_cert_file: {{ kibana_ssl_cert }}
 {% endif %}
 
 # Set the path to where you would like the process id file to be created.
-pid_file: {{ kibana_pid }}
+# pid_file: /var/run/kibana.pid
 
 # Plugins that are included in the build, and no longer found in the plugins/ folder
 bundled_plugin_ids:
