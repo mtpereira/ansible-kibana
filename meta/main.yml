@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Manuel Tiago Pereira
+  description:  Ansible role for Kibana 4.
+  license: BSD
+  min_ansible_version: 1.8
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+  categories:
+  - monitoring
+  - web
+dependencies: []
+
