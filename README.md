@@ -35,7 +35,7 @@ Required variables:
 
 Local facts:
 
-This role installs some local facts for guarantiing idempotency and also for easier integration with other roles.
+This role installs some local facts for guaranteeing idempotency and also for easier integration with other roles.
 
 * `ansible_local.kibana.url`: URL from where the currently installed Kibana was fetched from.
 * `ansible_local.kibana.tarball`: Tarball used for the currntly installed Kibana.
